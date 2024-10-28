@@ -1,0 +1,23 @@
+0it [00:00, ?it/s]12240it [00:00, 340029.15it/s]
+0it [00:00, ?it/s]1000it [00:00, 333039.86it/s]
+Fitting 3 folds for each of 1 candidates, totalling 3 fits
+
+Best parameters set found on training set:
+{'cls__C': 0.2, 'cls__kernel': 'linear'}
+
+Maximum accuracy found on training set:
+0.7553921568627451
+
+Classification Report:
+              precision    recall  f1-score   support
+
+         NOT       0.77      0.90      0.83       648
+         OFF       0.74      0.51      0.60       352
+
+    accuracy                           0.76      1000
+   macro avg       0.76      0.71      0.72      1000
+weighted avg       0.76      0.76      0.75      1000
+
+[CV] END .....................cls__C=0.2, cls__kernel=linear; total time=  16.4s
+[CV] END .....................cls__C=0.2, cls__kernel=linear; total time=  17.2s
+[CV] END .....................cls__C=0.2, cls__kernel=linear; total time=  17.3s

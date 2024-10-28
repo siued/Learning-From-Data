@@ -1,0 +1,23 @@
+Fitting 5 folds for each of 1 candidates, totalling 5 fits
+
+Best parameters set found on training set:
+{}
+
+Maximum accuracy found on training set:
+0.743218954248366
+
+Classification Report:
+              precision    recall  f1-score   support
+
+         NOT       0.75      0.86      0.80       648
+         OFF       0.64      0.46      0.53       352
+
+    accuracy                           0.72      1000
+   macro avg       0.69      0.66      0.67      1000
+weighted avg       0.71      0.72      0.71      1000
+
+[CV] END .................................................... total time=   2.9s
+[CV] END .................................................... total time=   2.9s
+[CV] END .................................................... total time=   2.8s
+[CV] END .................................................... total time=   2.9s
+[CV] END .................................................... total time=   2.7s
