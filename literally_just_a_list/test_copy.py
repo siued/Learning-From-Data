@@ -69,25 +69,6 @@ def read_corpus(corpus_file):
             labels.append(label)
     return documents, labels
 
-def tokenizer(doc):
-    tokens = word_tokenize(doc)
-    tokens = [token for token in tokens if token != '@USER' and token != 'URL' and token.isalnum()]
-    return tokens
-
-def get_default_vectorizer():
-    """
-    Returns the vectorizer setup which was found most effective during feature testing.
-
-    :return: The default vectorizer
-    """
-    return TfidfVectorizer(
-        ngram_range=(1, 3),
-        max_df=0.9,
-        max_features=50000,
-        tokenizer=tokenizer,
-        token_pattern=None
-    )
-
 
 def main():
     """
@@ -98,44 +79,17 @@ def main():
     X_train, Y_train = read_corpus(args.train_file)
     X_test, Y_test = read_corpus(args.dev_file)
 
-    vec = get_default_vectorizer()
+    with open('bad_words.json') as f:
+        bad_words = json.load(f)
 
-    # Choose the classifier
-    match 'svm':
-        case 'nb':
-            classifier = ImbPipeline([
-                ('vec', vec),
-                ('smote', SMOTE()),  # Add SMOTE in the pipeline
-                ('cls', MultinomialNB())
-            ])
-            grid = {
-                'cls__alpha': np.linspace(0.1, 1, 5),
-                'cls__fit_prior': [True, False],
-            }
-        case 'svm':
-            classifier = ImbPipeline([
-                ('vec', vec),
-                ('smote', SMOTE()),  # Add SMOTE in the pipeline
-                ('cls', SVC())
-            ])
-            grid = {
-                'cls__kernel': ['linear'],
-                'cls__C': [0.2, 1],
-                'cls__class_weight': ['balanced'],
-            }
-        case _:
-            raise ValueError(f"Invalid classifier: {args.classifier}")
-
-
-    # Below is the grid search implementation.
-    # param_grid is a dictionary of hyperparameter value lists for the classifier.
-    param_search = GridSearchCV(classifier, param_grid=grid, cv=3, n_jobs=-1, verbose=2, scoring='f1_weighted')
-    param_search.fit(X_train, Y_train)
-    print("\nBest parameters set found on training set:")
-    print(param_search.best_params_)
-    print("\nMaximum accuracy found on training set:")
-    print(param_search.best_score_)
-    Y_pred = param_search.predict(X_test)
+    Y_pred = []
+    for doc in tqdm(X_test):
+        off = False
+        for word in bad_words:
+            if word in doc:
+                off = True
+                break
+        Y_pred.append('OFF' if off else 'NOT')
 
     print("\nClassification Report:")
     print(classification_report(Y_test, Y_pred))
